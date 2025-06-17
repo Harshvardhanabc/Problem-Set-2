@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload</title>
+</head>
+<body>
+    {% extends 'base.html' %}
+    {% block content %}
+    <div class="p-6">
+    <h2 class="text-2xl font-bold mb-4">Upload Screenshot</h2>
+    <form action="{% url 'upload-screenshot' %}" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded shadow-md">
+        {% csrf_token %}
+        <input type="file" name="screenshot" accept="image/*" class="mb-4">
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Upload</button>
+    </form>
+    </div>
+    {% endblock %}
+
+</body>
+</html>

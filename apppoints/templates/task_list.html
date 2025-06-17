@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="p-6 space-y-4 max-w-2xl mx-auto">
+    {% for app in apps %}
+    <div class="flex items-center justify-between bg-gray-100 rounded-lg shadow-md p-4">
+        <div class="flex items-center space-x-4">
+            <img src="{{ app.logo_url|default:'/static/images/default-app.png' }}" alt="{{ app.name }} Logo" class="w-20 h-20 object-contain">
+            <div>
+                <h3 class="text-lg font-semibold">{{ app.name }}</h3>
+                <p class="text-sm text-gray-600">{{ app.package }}</p>
+                {% if app.screenshot %}
+                    <span class="text-black-600 font-semibold">Completed</span>
+                {% else %}
+                    <span class="text-black-500">Pending</span>
+                {% endif %} <br>
+                <a href="/app/{{ app.id }}/" class="text-sm text-blue-600 hover:text-red-500">View in Detail &gt;</a>
+            </div>
+        </div>
+        <div class="bg-teal-200 text-teal-800 font-bold px-4 py-2 rounded-md text-sm">
+            {{ app.points }} POINTS
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-gray-500 text-center">No apps available.</p>
+    {% endfor %}
+</div>
+{% endblock %}

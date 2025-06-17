@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="mt-6">
+        <a href="{% url 'task-list' %}" class="text-blue-600 hover:text-red-500"> &lt; {{ app.name }}</a>
+    </div>
+<div class="max-w-xl mx-auto p-6 bg-gray-100 rounded shadow-md border border-gray-300">
+    <!-- Header with Logo and Points -->
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-4">
+            {% if app.logo_url %}
+                <img src="{{ app.logo_url }}" alt="{{ app.name }} Logo" class="w-16 h-16 rounded bg-white p-1">
+            {% endif %}
+            <div>
+                <h2 class="text-2xl font-bold">{{ app.name }}</h2>
+                <a href="https://{{ app.package }}" target="_blank">{{ app.package }}</a>
+                
+                
+                
+            </div>
+        </div>
+        <div class="bg-emerald-300 text-black font-semibold px-4 py-2 rounded shadow">
+            {{ app.points }} POINTS
+        </div>
+    </div>
+
+    <!-- Upload Screenshot Box -->
+    <form id="uploadForm" action="{% url 'upload_screenshot' app.id %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="bg-white border-2 border-dashed border-gray-300 rounded-md h-64 flex flex-col items-center justify-center text-gray-500 text-center cursor-pointer hover:border-blue-500 transition" id="drop-zone">
+            <svg class="w-12 h-12 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M7 16l-4-4m0 0l4-4m-4 4h18M3 12h18" />
+            </svg>
+            <p class="text-lg font-medium">Upload Screenshots to complete the TASK</p>
+            <input type="file" name="screenshot" class="hidden" id="screenshot-upload">
+        </div>
+    </form>
+
+    <!--
+    <div class="mt-6 text-sm text-gray-700 space-y-2">
+        <p><strong>Package:</strong> {{ app.package }}</p>
+        <p><strong>Category:</strong> {{ app.category }}</p>
+        <p><strong>Sub Category:</strong> {{ app.sub_category }}</p>
+        {% if app.completed is not none %}
+            <p><strong>Completed:</strong> {{ app.completed }}</p>
+        {% endif %}
+    </div>-->
+
+    <!-- Already Uploaded Screenshot -->
+    {% if app.screenshot %}
+        <div class="mt-6">
+            <p><strong>Uploaded Screenshot:</strong></p>
+            <img src="{{ app.screenshot.url }}" alt="Screenshot" class="mt-2 w-full max-w-md rounded shadow">
+        </div>
+    {% endif %}
+
+    
+</div>
+
+<script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('screenshot-upload');
+    const form = document.getElementById('uploadForm');
+
+    // Trigger file dialog on click
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    // Drag events styling
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            form.submit(); // Submit form automatically
+        }
+    });
+</script>
+
+{% endblock %}
